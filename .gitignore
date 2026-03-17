@@ -1,0 +1,13 @@
+.vscode
+src/output
+src/analyzerJson
+src/interim_binary
+src/build.log
+__pycache__
+*.hiproj
+
+# 忽略系统目录
+$RECYCLE.BIN/
+System Volume Information/
+ToolsChains/
+
