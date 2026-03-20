@@ -1,0 +1,3 @@
+add_subdirectory_if_exist(src)
+set(SOURCES "${SOURCES}" PARENT_SCOPE)
+set(PUBLIC_HEADER "${PUBLIC_HEADER}" "${CMAKE_CURRENT_SOURCE_DIR}/" PARENT_SCOPE)

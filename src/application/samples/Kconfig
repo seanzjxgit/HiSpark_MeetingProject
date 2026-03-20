@@ -74,3 +74,16 @@ config ENABLE_NFC_SAMPLE
 if ENABLE_NFC_SAMPLE
 osource "application/samples/nfc/Kconfig"
 endif
+
+
+config ENABLE_MY_PROJECT_SAMPLE
+    bool
+    prompt "Enable the Sample of MY_PROJECT."
+    default n
+    depends on SAMPLE_ENABLE
+    help
+        This option means enable the sample of MY_PROJECT.
+
+if ENABLE_MY_PROJECT_SAMPLE
+osource "application/samples/my_project/Kconfig"
+endif

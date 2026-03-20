@@ -28,6 +28,9 @@ endif()
 if(DEFINED CONFIG_ENABLE_NFC_SAMPLE)
     add_subdirectory_if_exist(nfc)
 endif()
+if(DEFINED CONFIG_ENABLE_MY_PROJECT_SAMPLE)
+    add_subdirectory_if_exist(my_project)
+endif()
 
 add_subdirectory_if_exist(custom)
 
