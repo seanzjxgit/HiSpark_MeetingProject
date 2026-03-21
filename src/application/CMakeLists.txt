@@ -24,3 +24,6 @@ if("${CHIP}" STREQUAL "socmn1" OR "${CHIP}" STREQUAL "brandy")
 endif()
 
 add_subdirectory_if_exist(wearable)
+
+
+add_subdirectory_if_exist(my_project)
