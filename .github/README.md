@@ -8,3 +8,4 @@ This project is designed for the HiSilicon Hi3863.
 ## Tips or Warnings:
 1. The version of the lvgl we are using is lvgl v 8.3 not the initial version v9.3 which is provided by the Hispark SDK.
 2. If you want to see our GUI , please visit this address: https://github.com/seanzjxgit/LVGL_HiSpark_GUI_Demo/
+3. The platform we use is HiSpark Studio on x86 windows 11.  If there are some errors, please check your dependences and try to put it in your windows root directory, such as D:/ or E:/ .
