@@ -6,10 +6,10 @@
 #include "gpio.h"
 #include "pinctrl.h"
 
-/* ===== 引脚定义 ===== */
-#define LCD_RST_GPIO    0       /* IO0 → RST  */
-#define LCD_BL_GPIO     1       /* IO1 → 背光 */
-#define LCD_DC_GPIO     2       /* IO2 → DCX  */
+/* ===== 引脚定义（对照引脚.md）===== */
+#define LCD_RST_GPIO    14      /* GPIO14 → LCD_RST  MODE_0 */
+#define LCD_BL_GPIO     0       /* GPIO0  → LCD_BL   MODE_0 */
+#define LCD_DC_GPIO     13      /* GPIO13 → LCD_DCX  MODE_0 */
 #define LCD_SPI_BUS     SPI_BUS_0
 
 /* ===== 屏幕分辨率 ===== */

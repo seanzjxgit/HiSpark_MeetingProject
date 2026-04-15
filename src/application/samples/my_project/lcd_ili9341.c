@@ -66,20 +66,20 @@ static void lcd_write_data16(uint16_t data)
  * ===================================================================== */
 static void lcd_gpio_init(void)
 {
-    /* RST */
-    uapi_pin_set_mode(LCD_RST_GPIO, PIN_MODE_0);
-    uapi_gpio_set_dir(LCD_RST_GPIO, GPIO_DIRECTION_OUTPUT);
-    uapi_gpio_set_val(LCD_RST_GPIO, GPIO_LEVEL_HIGH);
+    /* RST → GPIO14, MODE_0 */
+    uapi_pin_set_mode(14, PIN_MODE_0);
+    uapi_gpio_set_dir(14, GPIO_DIRECTION_OUTPUT);
+    uapi_gpio_set_val(14, GPIO_LEVEL_HIGH);
 
-    /* DC */
-    uapi_pin_set_mode(LCD_DC_GPIO, PIN_MODE_0);
-    uapi_gpio_set_dir(LCD_DC_GPIO, GPIO_DIRECTION_OUTPUT);
-    uapi_gpio_set_val(LCD_DC_GPIO, GPIO_LEVEL_HIGH);
+    /* DCX → GPIO13, MODE_0 */
+    uapi_pin_set_mode(13, PIN_MODE_0);
+    uapi_gpio_set_dir(13, GPIO_DIRECTION_OUTPUT);
+    uapi_gpio_set_val(13, GPIO_LEVEL_HIGH);
 
-    /* 背光 */
-    uapi_pin_set_mode(LCD_BL_GPIO, PIN_MODE_0);
-    uapi_gpio_set_dir(LCD_BL_GPIO, GPIO_DIRECTION_OUTPUT);
-    uapi_gpio_set_val(LCD_BL_GPIO, GPIO_LEVEL_LOW);  /* 先关背光 */
+    /* BL → GPIO0, MODE_0 */
+    uapi_pin_set_mode(0, PIN_MODE_0);
+    uapi_gpio_set_dir(0, GPIO_DIRECTION_OUTPUT);
+    uapi_gpio_set_val(0, GPIO_LEVEL_LOW);  /* 先关背光 */
 }
 
 /* =====================================================================
@@ -87,19 +87,19 @@ static void lcd_gpio_init(void)
  * ===================================================================== */
 static void lcd_spi_init(void)
 {
-    /* SPI引脚复用配置 */
-    uapi_pin_set_mode(6,  PIN_MODE_1);  /* IO6  → SPI0_SCK  */
-    uapi_pin_set_mode(10, PIN_MODE_1);  /* IO10 → SPI0_CS0  */
-    uapi_pin_set_mode(11, PIN_MODE_1);  /* IO11 → SPI0_IN   */
-    uapi_pin_set_mode(13, PIN_MODE_1);  /* IO13 → SPI0_OUT  */
+    /* SPI引脚复用配置（对照引脚.md）*/
+    uapi_pin_set_mode(9,  PIN_MODE_3);  /* GPIO9  → SPI0_OUT(MOSI) MODE_3 ⚠️ */
+    uapi_pin_set_mode(7,  PIN_MODE_3);  /* GPIO7  → SPI0_SCK       MODE_3    */
+    /* MISO不接，单向写屏 */
+    /* CS由SPI硬件控制，暂不配置，或用软件CS */
 
     spi_attr_t spi_cfg = {0};
     spi_cfg.is_slave         = false;
     spi_cfg.slave_num        = 1;
-    spi_cfg.bus_clk          = 40000000;           /* 40MHz总线时钟 */
-    spi_cfg.freq_mhz         = 10;                 /* 10MHz SPI速率，稳定后可提高 */
-    spi_cfg.clk_polarity     = SPI_CFG_CLK_CPOL_0; /* CPOL=0 */
-    spi_cfg.clk_phase        = SPI_CFG_CLK_CPHA_0; /* CPHA=0 */
+    spi_cfg.bus_clk          = 40000000;
+    spi_cfg.freq_mhz         = 10;
+    spi_cfg.clk_polarity     = SPI_CFG_CLK_CPOL_0;
+    spi_cfg.clk_phase        = SPI_CFG_CLK_CPHA_0;
     spi_cfg.frame_format     = SPI_CFG_FRAME_FORMAT_MOTOROLA_SPI;
     spi_cfg.spi_frame_format = HAL_SPI_FRAME_FORMAT_STANDARD;
     spi_cfg.frame_size       = HAL_SPI_FRAME_SIZE_8;
