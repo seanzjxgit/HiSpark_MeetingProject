@@ -32,16 +32,16 @@ typedef struct {
 } user_card_t;
 
 
-static char     *usr_name;
-static char     *home_time;
-static char     *home_date;
-static uint8_t   batt_pct;
-static char     *position[POSITION_HOME_NUM];
-static char     *meeting_time[MESSAGE_MEETING_NUM];
-static char     *meeting_content[MESSAGE_MEETING_NUM];
-static char     *level_text[3];
-static uint8_t   meeting_level[MESSAGE_MEETING_NUM];
-static uint8_t   meeting_order[MESSAGE_MEETING_NUM];
+char     *usr_name        = NULL;
+char     *home_time       = NULL;
+char     *home_date       = NULL;
+uint8_t   batt_pct        = 0;
+char     *position[POSITION_HOME_NUM] = {0};
+char     *meeting_time[MESSAGE_MEETING_NUM]    = {0};
+char     *meeting_content[MESSAGE_MEETING_NUM] = {0};
+char     *level_text[3];
+uint8_t   meeting_level[MESSAGE_MEETING_NUM]   = {0};
+uint8_t   meeting_order[MESSAGE_MEETING_NUM]   = {0};
 static lv_obj_t *meeting_list_obj = NULL;
 static lv_obj_t *card_list_obj    = NULL;
 static uint8_t   meeting_sort_asc = 0;

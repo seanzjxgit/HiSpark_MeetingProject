@@ -5,6 +5,7 @@
 #include "lvgl.h"
 #include "app_init.h"
 #include "cmsis_os2.h"
+#include "reminder/reminder.h"
 
 static void lvgl_task(void *arg)
 {
@@ -15,8 +16,16 @@ static void lvgl_task(void *arg)
     lv_port_indev_init();   /* 3. 初始化触摸驱动 */
     lv_mainstart();         /* 4. 启动你的UI */
 
+    /* reminder蜂鸣器*/
+    /* 初始化提醒模块 */
+    reminder_init();
+
+    /* 可选：设置提前提醒分钟数（默认5分钟）*/
+    reminder_set_advance_minutes(5);
+
     while(1) {
         lv_task_handler();
+        reminder_tick();    /* ← 每次循环检查  reminder加入*/
         osDelay(5);
     }
 }
