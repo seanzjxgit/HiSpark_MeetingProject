@@ -6,6 +6,7 @@
 #include "app_init.h"
 #include "cmsis_os2.h"
 #include "reminder/reminder.h"
+#include "nfc/nfc_checkin.h"
 
 static void lvgl_task(void *arg)
 {
@@ -23,6 +24,7 @@ static void lvgl_task(void *arg)
     /* 可选：设置提前提醒分钟数（默认5分钟）*/
     reminder_set_advance_minutes(5);
 
+    nfc_checkin_init();
     while(1) {
         lv_task_handler();
         reminder_tick();    /* ← 每次循环检查  reminder加入*/

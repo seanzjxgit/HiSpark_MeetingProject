@@ -76,10 +76,7 @@ static void lcd_gpio_init(void)
     uapi_gpio_set_dir(13, GPIO_DIRECTION_OUTPUT);
     uapi_gpio_set_val(13, GPIO_LEVEL_HIGH);
 
-    /* BL → GPIO0, MODE_0 */
-    uapi_pin_set_mode(0, PIN_MODE_0);
-    uapi_gpio_set_dir(0, GPIO_DIRECTION_OUTPUT);
-    uapi_gpio_set_val(0, GPIO_LEVEL_LOW);  /* 先关背光 */
+    
 }
 
 /* =====================================================================

@@ -5,7 +5,7 @@
 #include <stdbool.h>
 
 /* 蜂鸣器GPIO，根据实际接线修改 */
-#define BUZZER_GPIO      4      /* 待确认，先占位 */
+#define BUZZER_GPIO     0    /* GPIO0 → 蜂鸣器，S8050高电平导通 */
 
 void buzzer_init(void);
 void buzzer_on(void);

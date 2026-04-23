@@ -8,7 +8,7 @@
 
 /* ===== 引脚定义（对照引脚.md）===== */
 #define LCD_RST_GPIO    14      /* GPIO14 → LCD_RST  MODE_0 */
-#define LCD_BL_GPIO     0       /* GPIO0  → LCD_BL   MODE_0 */
+#define LCD_BL_GPIO     255      /* GPIO0  → LCD_BL   MODE_0 */
 #define LCD_DC_GPIO     13      /* GPIO13 → LCD_DCX  MODE_0 */
 #define LCD_SPI_BUS     SPI_BUS_0
 

@@ -108,6 +108,7 @@ void reminder_tick(void)
     uint32_t now_ms = osKernelGetTickCount();
 
     /* ---- 按键扫描（IO4低电平=按下）---- */
+    /* reminder.c 里的按键读取 */
     bool btn_pressed = (uapi_gpio_get_val(REMINDER_BTN_GPIO) == GPIO_LEVEL_LOW);
     if(btn_pressed && !g_btn_last) {
         /* 上升沿：按键刚按下 */

@@ -51,7 +51,7 @@ static lv_obj_t *sort_priority_btn = NULL;
 static lv_obj_t *sort_time_btn_obj = NULL;
 static user_card_t user_cards[USER_CARD_NUM];
 
-/* PPT 
+/* PPT
 static uint16_t ppt_current_page = 1;
 static uint16_t ppt_total_pages  = 20;
 */
@@ -63,7 +63,7 @@ static bool    ctrl_wifi_enabled      = true;
 static uint8_t ctrl_brightness        = 75;
 static uint8_t ctrl_volume            = 50;
 
-/* 
+/*
  * static void hw_ppt_prev_page(void);
  * static void hw_ppt_next_page(void);
  * void hw_ppt_get_page_info(uint16_t *current, uint16_t *total);
@@ -182,7 +182,7 @@ static lv_obj_t *create_glass_card(lv_obj_t *parent, lv_coord_t w, lv_coord_t h)
 
 static void create_home_page(lv_obj_t *parent)
 {
-   
+
     lv_obj_t *avatar_card = create_glass_card(parent, 110, 160);
     lv_obj_align(avatar_card, LV_ALIGN_LEFT_MID, 6, 0);
 
@@ -208,7 +208,7 @@ static void create_home_page(lv_obj_t *parent)
 
     lv_obj_t *name_box = lv_obj_create(avatar_card);
     lv_obj_set_size(name_box, 94, 24);
-    lv_obj_align(name_box, LV_ALIGN_BOTTOM_MID, 0, -4);
+    lv_obj_align(name_box, LV_ALIGN_BOTTOM_MID, 0, -30);
     lv_obj_set_style_bg_color(name_box, COLOR_WHITE, 0);
     lv_obj_set_style_bg_opa(name_box, LV_OPA_20, 0);
     lv_obj_set_style_border_color(name_box, COLOR_WHITE, 0);
@@ -218,13 +218,30 @@ static void create_home_page(lv_obj_t *parent)
     lv_obj_set_style_pad_all(name_box, 0, 0);
     lv_obj_set_scrollbar_mode(name_box, LV_SCROLLBAR_MODE_OFF);
 
+    lv_obj_t *name_box2 = lv_obj_create(avatar_card);
+    lv_obj_set_size(name_box2, 94, 24);
+    lv_obj_align(name_box2, LV_ALIGN_BOTTOM_MID, 0, 0);
+    lv_obj_set_style_bg_color(name_box2, COLOR_WHITE, 0);
+    lv_obj_set_style_bg_opa(name_box2, LV_OPA_20, 0);
+    lv_obj_set_style_border_color(name_box2, COLOR_WHITE, 0);
+    lv_obj_set_style_border_width(name_box2, 1, 0);
+    lv_obj_set_style_border_opa(name_box2, LV_OPA_40, 0);
+    lv_obj_set_style_radius(name_box2, 6, 0);
+    lv_obj_set_style_pad_all(name_box2, 0, 0);
+    lv_obj_set_scrollbar_mode(name_box2, LV_SCROLLBAR_MODE_OFF);
+
     lv_obj_t *name_lbl1 = lv_label_create(name_box);
     lv_label_set_text(name_lbl1, usr_name);
     lv_obj_set_style_text_font(name_lbl1, &lv_font_montserrat_12, 0);
     lv_obj_set_style_text_color(name_lbl1, COLOR_WHITE, 0);
     lv_obj_center(name_lbl1);
 
-    /* ---- ʱ�俨Ƭ�����ϣ�---- */
+    lv_obj_t *id_lbl = lv_label_create(name_box2);
+    lv_label_set_text(id_lbl, "ID: " THIS_DEVICE_USER_ID);
+    lv_obj_set_style_text_font(id_lbl, &lv_font_montserrat_12, -3);
+    lv_obj_set_style_text_color(id_lbl, lv_color_hex(0xAAAAAA), 0);
+    lv_obj_align_to(id_lbl, name_lbl1, LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
+
     lv_obj_t *info_card = create_glass_card(parent, 175, 68);
     lv_obj_align(info_card, LV_ALIGN_TOP_RIGHT, -6, 6);
 
@@ -241,7 +258,7 @@ static void create_home_page(lv_obj_t *parent)
     lv_obj_set_style_text_opa(date_lbl, LV_OPA_60, 0);
     lv_obj_align_to(date_lbl, time_lbl, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 4);
 
-    
+
     #define BATT_FILL_MAX_W 20
     uint8_t fill_w = (uint8_t)((uint32_t)batt_pct * BATT_FILL_MAX_W / 100);
     if(fill_w < 2) fill_w = 2;
@@ -291,7 +308,7 @@ static void create_home_page(lv_obj_t *parent)
     lv_obj_set_style_text_color(batt_lbl, fill_color, 0);
     lv_obj_align_to(batt_lbl, batt_border, LV_ALIGN_OUT_LEFT_MID, -2, 0);
 
-    
+
     lv_obj_t *pos_card = create_glass_card(parent, 175, 96);
     lv_obj_align(pos_card, LV_ALIGN_BOTTOM_RIGHT, -6, -6);
 
@@ -428,7 +445,7 @@ static void rebuild_meeting_list(void)
         lv_obj_set_scrollbar_mode(item, LV_SCROLLBAR_MODE_OFF);
         lv_obj_clear_flag(item, LV_OBJ_FLAG_SCROLLABLE);
 
-        
+
         lv_obj_t *left = lv_obj_create(item);
         lv_obj_set_size(left, lv_pct(78), lv_pct(100));
         lv_obj_align(left, LV_ALIGN_LEFT_MID, 0, 0);
@@ -467,7 +484,7 @@ static void rebuild_meeting_list(void)
         lv_obj_set_width(cont_lbl, lv_pct(90));
         lv_obj_align_to(cont_lbl, time_lbl, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 3);
 
-        
+
         lv_obj_t *div = lv_obj_create(item);
         lv_obj_set_size(div, 1, lv_pct(70));
         lv_obj_align(div, LV_ALIGN_RIGHT_MID, -lv_pct(22), 0);
@@ -525,7 +542,7 @@ static void create_meeting_page(lv_obj_t *parent)
 {
     for(uint8_t i = 0; i < MESSAGE_MEETING_NUM; i++) meeting_order[i] = i;
 
-    
+
     lv_obj_t *hdr = create_glass_card(parent, lv_pct(96), 28);
     lv_obj_align(hdr, LV_ALIGN_TOP_MID, 0, 4);
     lv_obj_set_style_pad_hor(hdr, 6, 0);
@@ -537,7 +554,7 @@ static void create_meeting_page(lv_obj_t *parent)
     lv_obj_set_style_text_color(title, COLOR_WHITE, 0);
     lv_obj_align(title, LV_ALIGN_LEFT_MID, 0, 0);
 
-  
+
     sort_priority_btn = lv_btn_create(hdr);
     lv_obj_set_size(sort_priority_btn, 60, 20);
     lv_obj_align(sort_priority_btn, LV_ALIGN_RIGHT_MID, -88, 0);
@@ -556,7 +573,7 @@ static void create_meeting_page(lv_obj_t *parent)
     lv_obj_center(slbl);
     lv_obj_add_event_cb(sort_priority_btn, sort_btn_cb, LV_EVENT_CLICKED, NULL);
 
-    
+
     sort_time_btn_obj = lv_btn_create(hdr);
     lv_obj_set_size(sort_time_btn_obj, 60, 20);
     lv_obj_align(sort_time_btn_obj, LV_ALIGN_RIGHT_MID, -22, 0);
@@ -652,7 +669,7 @@ static void rebuild_card_list(void)
         lv_obj_set_scrollbar_mode(card, LV_SCROLLBAR_MODE_OFF);
         lv_obj_clear_flag(card, LV_OBJ_FLAG_SCROLLABLE);
 
-        
+
         lv_obj_t *sb = lv_obj_create(card);
         lv_obj_set_size(sb, 4, ch - 12);
         lv_obj_align(sb, LV_ALIGN_LEFT_MID, -6, 0);
@@ -665,7 +682,7 @@ static void rebuild_card_list(void)
         lv_obj_set_style_shadow_opa(sb, LV_OPA_50, 0);
         lv_obj_clear_flag(sb, LV_OBJ_FLAG_CLICKABLE);
 
-       
+
         lv_obj_t *ac = lv_obj_create(card);
         lv_obj_set_size(ac, 44, 44);
         lv_obj_align(ac, LV_ALIGN_TOP_LEFT, 6, 0);
@@ -688,7 +705,7 @@ static void rebuild_card_list(void)
         lv_img_set_antialias(ai, true);
         lv_obj_center(ai);
 
-        
+
         lv_obj_t *info = lv_obj_create(card);
         lv_obj_set_size(info, 170, ch - 12);
         lv_obj_align(info, LV_ALIGN_TOP_LEFT, 58, 0);
@@ -779,7 +796,7 @@ static void create_card_page(lv_obj_t *parent)
 }
 
 /* =====================================================================
- * Controller ҳ  
+ * Controller ҳ
  * ===================================================================== */
 static void switch_event_cb(lv_event_t *e)
 {
@@ -925,7 +942,7 @@ static void create_controller_page(lv_obj_t *parent)
 {
     /*
      * ============================================================
-     * PPT 
+     * PPT
      * ============================================================
      *
      * lv_obj_t *ppt_card = create_glass_card(parent, lv_pct(92), 80);
@@ -937,7 +954,7 @@ static void create_controller_page(lv_obj_t *parent)
      * ============================================================
      */
 
-    
+
     lv_obj_t *tc = create_glass_card(parent, lv_pct(96), 24);
     lv_obj_align(tc, LV_ALIGN_TOP_MID, 0, 4);
     lv_obj_t *tl = lv_label_create(tc);
@@ -1010,10 +1027,10 @@ static void tab_btn_event_cb(lv_event_t *e)
 
 void lv_mainstart(void)
 {
-    
+
     usr_name  = "User";
     home_time = "12:20";
-    home_date = "2026/01/01 Mon";  
+    home_date = "2026/01/01 Mon";
     batt_pct  = 70;
 
     position[0] = "CTO";
@@ -1057,7 +1074,7 @@ void lv_mainstart(void)
     user_cards[2].valid = false; user_cards[2].name = "";
     user_cards[2].position_count = 0;
 
-    /* PPT 
+    /* PPT
     ppt_current_page = 1;
     ppt_total_pages  = 20;
     */
@@ -1069,7 +1086,7 @@ void lv_mainstart(void)
     lv_obj_clear_flag(screen, LV_OBJ_FLAG_CLICKABLE);
     lv_obj_set_scrollbar_mode(screen, LV_SCROLLBAR_MODE_OFF);
 
-    
+
     for(uint8_t i = 0; i < PAGE_COUNT; i++) {
         page_created[i] = false;
         pages[i] = lv_obj_create(screen);
@@ -1144,7 +1161,7 @@ void lv_mainstart(void)
 
 
 
-/* PPT 
+/* PPT
 void hw_ppt_get_page_info(uint16_t *current, uint16_t *total) {
     if(current) *current = ppt_current_page;
     if(total)   *total   = ppt_total_pages;

@@ -122,9 +122,8 @@ void touch_init(void)
  * ===================================================================== */
 bool touch_is_pressed(void)
 {
-    gpio_level_t level = GPIO_LEVEL_HIGH;
-    uapi_gpio_get_val(TOUCH_INT_GPIO);//删除第二个&level
-    return (level == GPIO_LEVEL_LOW);
+    /* uapi_gpio_get_val 只有1个参数，直接返回电平值 */
+    return (uapi_gpio_get_val(TOUCH_INT_GPIO) == GPIO_LEVEL_LOW);
 }
 
 /* =====================================================================
