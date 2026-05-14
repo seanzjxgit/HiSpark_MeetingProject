@@ -19,15 +19,15 @@ static void lvgl_task(void *arg)
 
     /* reminder蜂鸣器*/
     /* 初始化提醒模块 */
-    reminder_init();
+    // reminder_init();
 
     /* 可选：设置提前提醒分钟数（默认5分钟）*/
-    reminder_set_advance_minutes(5);
+    // reminder_set_advance_minutes(5);
 
-    nfc_checkin_init();
+    // nfc_checkin_init();
     while(1) {
         lv_task_handler();
-        reminder_tick();    /* ← 每次循环检查  reminder加入*/
+        // reminder_tick();    /* ← 每次循环检查  reminder加入*/
         osDelay(5);
     }
 }

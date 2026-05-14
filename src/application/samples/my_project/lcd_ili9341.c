@@ -76,7 +76,7 @@ static void lcd_gpio_init(void)
     uapi_gpio_set_dir(13, GPIO_DIRECTION_OUTPUT);
     uapi_gpio_set_val(13, GPIO_LEVEL_HIGH);
 
-    
+    /* 背光直接接3.3V，无需GPIO初始化 */
 }
 
 /* =====================================================================
@@ -249,6 +249,9 @@ void lcd_write_pixels(uint16_t *data, uint32_t len)
  * ===================================================================== */
 void lcd_backlight(uint8_t on)
 {
+    /*
     uapi_gpio_set_val(LCD_BL_GPIO,
         on ? GPIO_LEVEL_HIGH : GPIO_LEVEL_LOW);
+        */
+    (void)on;//背光常量
 }
