@@ -7,21 +7,25 @@
 /* =====================================================================
  * 底层GPIO操作
  * ===================================================================== */
+//命令模式 -> lcd_write_cmd
 static void lcd_dc_cmd(void)
 {
     uapi_gpio_set_val(LCD_DC_GPIO, GPIO_LEVEL_LOW);
 }
 
+//数据模式 -> lcd_write_data8
 static void lcd_dc_data(void)
 {
     uapi_gpio_set_val(LCD_DC_GPIO, GPIO_LEVEL_HIGH);
 }
 
+//复位引脚拉高 
 static void lcd_rst_low(void)
 {
     uapi_gpio_set_val(LCD_RST_GPIO, GPIO_LEVEL_LOW);
 }
 
+//复位引脚拉低
 static void lcd_rst_high(void)
 {
     uapi_gpio_set_val(LCD_RST_GPIO, GPIO_LEVEL_HIGH);
@@ -67,14 +71,14 @@ static void lcd_write_data16(uint16_t data)
 static void lcd_gpio_init(void)
 {
     /* RST → GPIO14, MODE_0 */
-    uapi_pin_set_mode(14, PIN_MODE_0);
-    uapi_gpio_set_dir(14, GPIO_DIRECTION_OUTPUT);
-    uapi_gpio_set_val(14, GPIO_LEVEL_HIGH);
+    uapi_pin_set_mode(LCD_RST_GPIO, PIN_MODE_0);//复位引脚
+    uapi_gpio_set_dir(LCD_RST_GPIO, GPIO_DIRECTION_OUTPUT);
+    uapi_gpio_set_val(LCD_RST_GPIO, GPIO_LEVEL_HIGH);//初始化为不复位状态
 
     /* DCX → GPIO13, MODE_0 */
-    uapi_pin_set_mode(13, PIN_MODE_0);
-    uapi_gpio_set_dir(13, GPIO_DIRECTION_OUTPUT);
-    uapi_gpio_set_val(13, GPIO_LEVEL_HIGH);
+    uapi_pin_set_mode(LCD_DC_GPIO, PIN_MODE_0);//DC引脚
+    uapi_gpio_set_dir(LCD_DC_GPIO, GPIO_DIRECTION_OUTPUT);
+    uapi_gpio_set_val(LCD_DC_GPIO, GPIO_LEVEL_HIGH);//初始化为数据模式（闲置态）
 
     /* 背光直接接3.3V，无需GPIO初始化 */
 }
@@ -85,10 +89,9 @@ static void lcd_gpio_init(void)
 static void lcd_spi_init(void)
 {
     /* SPI引脚复用配置（对照引脚.md）*/
-    uapi_pin_set_mode(9,  PIN_MODE_3);  /* GPIO9  → SPI0_OUT(MOSI) MODE_3 ⚠️ */
-    uapi_pin_set_mode(7,  PIN_MODE_3);  /* GPIO7  → SPI0_SCK       MODE_3    */
-    /* MISO不接，单向写屏 */
-    /* CS由SPI硬件控制，暂不配置，或用软件CS */
+    uapi_pin_set_mode(LCD_SCK_GPIO,  PIN_MODE_3);  /* GPIO7  → SPI0_SCK       MODE_3    */
+    uapi_pin_set_mode(LCD_MOSI_GPIO,  PIN_MODE_3);  /* GPIO9  → SPI0_OUT(MOSI) MODE_3    */
+    uapi_pin_set_ds(LCD_SCK_GPIO, PIN_DS_7);
 
     spi_attr_t spi_cfg = {0};
     spi_cfg.is_slave         = false;
@@ -129,8 +132,8 @@ void lcd_init(void)
     lcd_spi_init();
     lcd_hard_reset();
 
-    lcd_write_cmd(0x01);   /* 软复位 */
-    osDelay(100);
+    lcd_write_cmd(0x01);   /* 软复位 可省去 最好120ms */
+    osDelay(120);
     lcd_write_cmd(0x11);   /* 退出睡眠 */
     osDelay(120);
 
@@ -154,7 +157,7 @@ void lcd_init(void)
 
     /* 16bit RGB565 */
     lcd_write_cmd(0x3A);
-    lcd_write_data8(0x55);
+    lcd_write_data8(0x55); // 16bit RGB565
 
     /* 帧率 */
     lcd_write_cmd(0xB1);
@@ -194,7 +197,7 @@ void lcd_init(void)
     lcd_write_cmd(0x29);   /* 开显示 */
     osDelay(100);
 
-    lcd_backlight(1);      /* 开背光 */
+    lcd_backlight(1);      /* 背光常量 */
 }
 
 /* =====================================================================
@@ -228,7 +231,7 @@ void lcd_write_pixels(uint16_t *data, uint32_t len)
     while(sent < len) {
         uint32_t batch = len - sent;
         if(batch > 320) batch = 320;
-
+        
         /* RGB565大端字节序转换 */
         for(uint32_t i = 0; i < batch; i++) {
             line_buf[i * 2]     = (data[sent + i] >> 8) & 0xFF;
@@ -249,9 +252,23 @@ void lcd_write_pixels(uint16_t *data, uint32_t len)
  * ===================================================================== */
 void lcd_backlight(uint8_t on)
 {
-    /*
-    uapi_gpio_set_val(LCD_BL_GPIO,
-        on ? GPIO_LEVEL_HIGH : GPIO_LEVEL_LOW);
-        */
     (void)on;//背光常量
+}
+
+// 全红 测试函数
+void lcd_test_full_red(void)
+{
+    // 1. 设置扫描区域为全屏
+    lcd_set_window(0, 0, 239, 319); 
+    
+    // 2. 开始写入显存
+    lcd_write_cmd(0x2C); 
+    
+    uapi_gpio_set_val(LCD_DC_GPIO, GPIO_LEVEL_HIGH); // 进入数据模式
+    
+    // 3. 循环发送红色像素 (RGB565 红色是 0xF800)
+    uint8_t red_data[2] = {0xF8, 0x00};
+    for (uint32_t i = 0; i < 320 * 240; i++) {
+        lcd_spi_write(red_data, 2);
+    }
 }
