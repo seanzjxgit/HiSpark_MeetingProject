@@ -41,7 +41,7 @@ static void lcd_spi_write(uint8_t *buf, uint32_t len)
     xfer.tx_bytes = len;
     xfer.rx_buff  = NULL;
     xfer.rx_bytes = 0;
-    uapi_spi_master_write(LCD_SPI_BUS, &xfer, 100);
+    uapi_spi_master_write(LCD_SPI_BUS, &xfer, 1000);
 }
 
 static void lcd_write_cmd(uint8_t cmd)
