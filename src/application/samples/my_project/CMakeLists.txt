@@ -2,7 +2,7 @@ set(SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/meeting.c
     ${CMAKE_CURRENT_SOURCE_DIR}/lv_mainstart.c
     ${CMAKE_CURRENT_SOURCE_DIR}/lcd_ili9341.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/touch_ns2009.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/touch_ft6336u.c
     ${CMAKE_CURRENT_SOURCE_DIR}/reminder/reminder.c
     ${CMAKE_CURRENT_SOURCE_DIR}/reminder/reminder_ui.c
     ${CMAKE_CURRENT_SOURCE_DIR}/reminder/buzzer.c

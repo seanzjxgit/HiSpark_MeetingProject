@@ -7,7 +7,7 @@
 #include "cmsis_os2.h"
 #include "reminder/reminder.h"
 #include "nfc/nfc_checkin.h"
-
+#include "touch_ft6336u.h"
 #include "lcd_ili9341.h"  // 全红测试需要加上的
 
 
@@ -16,8 +16,9 @@ static void lvgl_task(void *arg)
     (void)arg;
 
     lv_init();              // 1. 初始化LVGL 
+    touch_init();           //触控芯片初始化
     lv_port_disp_init();    // 2. 初始化显示驱动
-    //lv_port_indev_init();   // 3. 初始化触摸驱动 
+    lv_port_indev_init();   // 3. 初始化触摸驱动 
     lv_mainstart();         // 4. 启动你的UI 
 
     // reminder蜂鸣器

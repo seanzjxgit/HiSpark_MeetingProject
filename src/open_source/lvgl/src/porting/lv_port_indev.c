@@ -2,7 +2,7 @@
 
 #include "lv_port_indev.h"
 #include "../../lvgl.h"
-#include "touch_ns2009.h"
+#include "touch_ft6336u.h"
 
 static lv_indev_t *indev_touchpad;
 
