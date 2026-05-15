@@ -273,8 +273,12 @@ void lcd_test_full_red(void)
     uapi_gpio_set_val(LCD_DC_GPIO, GPIO_LEVEL_HIGH); // 进入数据模式
     
     // 3. 循环发送红色像素 (RGB565 红色是 0xF800)
-    uint8_t red_data[2] = {0xFF, 0xFF};//白色FFFF 蓝色001F
+    uint8_t red_data[2] = {0xF8, 0x00};//白色FFFF 蓝色001F
     for (uint32_t i = 0; i < 320 * 240; i++) {
         lcd_spi_write(red_data, 2);
+    }
+    uint8_t white_data[2] = {0xFF, 0xFF};//白色FFFF 蓝色001F
+    for (uint32_t i = 0; i < 320 * 240; i++) {
+        lcd_spi_write(white_data, 2);
     }
 }

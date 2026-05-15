@@ -49,7 +49,7 @@ static void lvgl_task(void *arg)
     while(1) {
         // 维持现状，不要让 LVGL 的任务跑起来干扰
         lcd_test_full_red();
-        osDelay(1000);
+        osDelay(100);
     }
 }
 
