@@ -55,7 +55,7 @@ static void lcd_write_data8(uint8_t data)
     lcd_dc_data();
     lcd_spi_write(&data, 1);
 }
-
+/*
 static void lcd_write_data16(uint16_t data)
 {
     lcd_dc_data();
@@ -64,7 +64,7 @@ static void lcd_write_data16(uint16_t data)
     buf[1] =  data & 0xFF;
     lcd_spi_write(buf, 2);
 }
-
+*/
 /* =====================================================================
  * GPIO初始化
  * ===================================================================== */
@@ -91,13 +91,13 @@ static void lcd_spi_init(void)
     /* SPI引脚复用配置（对照引脚.md）*/
     uapi_pin_set_mode(LCD_SCK_GPIO,  PIN_MODE_3);  /* GPIO7  → SPI0_SCK       MODE_3    */
     uapi_pin_set_mode(LCD_MOSI_GPIO,  PIN_MODE_3);  /* GPIO9  → SPI0_OUT(MOSI) MODE_3    */
-    uapi_pin_set_ds(LCD_SCK_GPIO, PIN_DS_7);
+    uapi_pin_set_ds(LCD_SCK_GPIO, PIN_DS_4);
 
     spi_attr_t spi_cfg = {0};
     spi_cfg.is_slave         = false;
     spi_cfg.slave_num        = 1;
     spi_cfg.bus_clk          = 40000000;
-    spi_cfg.freq_mhz         = 10;
+    spi_cfg.freq_mhz         = 20;
     spi_cfg.clk_polarity     = SPI_CFG_CLK_CPOL_0;
     spi_cfg.clk_phase        = SPI_CFG_CLK_CPHA_0;
     spi_cfg.frame_format     = SPI_CFG_FRAME_FORMAT_MOTOROLA_SPI;
@@ -153,7 +153,7 @@ void lcd_init(void)
 
     /* 横屏 320x240，BGR颜色顺序 */
     lcd_write_cmd(0x36);
-    lcd_write_data8(0x08);//开水器BGR模式修正
+    lcd_write_data8(0x28);// 28 ->开启BGR模式修正
 
     /* 反色关闭显示*/
     lcd_write_cmd(0x21);
@@ -169,7 +169,7 @@ void lcd_init(void)
 
     /* 显示功能 */
     lcd_write_cmd(0xB6);
-    lcd_write_data8(0x08);
+    lcd_write_data8(0x0A);
     lcd_write_data8(0x82);
     lcd_write_data8(0x27);
 
@@ -209,18 +209,21 @@ void lcd_init(void)
 /* =====================================================================
  * 设置显示窗口
  * ===================================================================== */
-void lcd_set_window(uint16_t x1, uint16_t y1,
-                    uint16_t x2, uint16_t y2)
+void lcd_set_window(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2)
 {
-    lcd_write_cmd(0x2A);      /* 列地址 */
-    lcd_write_data16(x1);
-    lcd_write_data16(x2);
+    lcd_write_cmd(0x2A); // 列地址设置
+    lcd_write_data8(x1 >> 8);
+    lcd_write_data8(x1 & 0xFF);
+    lcd_write_data8(x2 >> 8);
+    lcd_write_data8(x2 & 0xFF);
 
-    lcd_write_cmd(0x2B);      /* 行地址 */
-    lcd_write_data16(y1);
-    lcd_write_data16(y2);
+    lcd_write_cmd(0x2B); // 行地址设置
+    lcd_write_data8(y1 >> 8);
+    lcd_write_data8(y1 & 0xFF);
+    lcd_write_data8(y2 >> 8);
+    lcd_write_data8(y2 & 0xFF);
 
-    lcd_write_cmd(0x2C);      /* 写GRAM */
+    lcd_write_cmd(0x2C); // 开始写显存
 }
 
 /* =====================================================================

@@ -10,14 +10,14 @@
 
 #include "lcd_ili9341.h"  // 全红测试需要加上的
 
-/*
+
 static void lvgl_task(void *arg)
 {
     (void)arg;
 
     lv_init();              // 1. 初始化LVGL 
     lv_port_disp_init();    // 2. 初始化显示驱动
-    lv_port_indev_init();   // 3. 初始化触摸驱动 
+    //lv_port_indev_init();   // 3. 初始化触摸驱动 
     lv_mainstart();         // 4. 启动你的UI 
 
     // reminder蜂鸣器
@@ -33,25 +33,9 @@ static void lvgl_task(void *arg)
         // reminder_tick();    // ← 每次循环检查  reminder加入
         osDelay(5);
     }
-}*/
-
-static void lvgl_task(void *arg)
-{
-    (void)arg;
-
-    // 1. 调用刚才写的硬件初始化
-    lcd_init(); 
-    
-    // 2. 刷红色测试
-    // 如果屏幕驱动、引脚、SPI 都通了，屏幕现在会瞬间变红
-    lcd_test_full_red();
-
-    while(1) {
-        // 维持现状，不要让 LVGL 的任务跑起来干扰
-        lcd_test_full_red();
-        osDelay(100);
-    }
 }
+
+
 
 static void adc_entry(void)
 {
