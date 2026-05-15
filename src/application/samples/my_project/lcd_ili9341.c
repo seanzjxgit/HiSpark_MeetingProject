@@ -153,7 +153,10 @@ void lcd_init(void)
 
     /* 横屏 320x240，BGR颜色顺序 */
     lcd_write_cmd(0x36);
-    lcd_write_data8(0x48);
+    lcd_write_data8(0x08);//开水器BGR模式修正
+
+    /* 反色关闭显示*/
+    lcd_write_cmd(0x21);
 
     /* 16bit RGB565 */
     lcd_write_cmd(0x3A);
@@ -193,6 +196,9 @@ void lcd_init(void)
     lcd_write_data8(0x0F); lcd_write_data8(0x0C);
     lcd_write_data8(0x31); lcd_write_data8(0x36);
     lcd_write_data8(0x0F);
+
+    /*正常显示模式*/
+    lcd_write_cmd(0x13);
 
     lcd_write_cmd(0x29);   /* 开显示 */
     osDelay(100);
@@ -267,7 +273,7 @@ void lcd_test_full_red(void)
     uapi_gpio_set_val(LCD_DC_GPIO, GPIO_LEVEL_HIGH); // 进入数据模式
     
     // 3. 循环发送红色像素 (RGB565 红色是 0xF800)
-    uint8_t red_data[2] = {0xF8, 0x00};//白色FFFF 蓝色001F
+    uint8_t red_data[2] = {0xFF, 0xFF};//白色FFFF 蓝色001F
     for (uint32_t i = 0; i < 320 * 240; i++) {
         lcd_spi_write(red_data, 2);
     }
