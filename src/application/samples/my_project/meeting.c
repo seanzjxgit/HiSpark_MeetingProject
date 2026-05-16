@@ -17,9 +17,10 @@ static void lvgl_task(void *arg)
 
     lv_init();              // 1. 初始化LVGL 
     touch_init();           //触控芯片初始化
-    lv_port_disp_init();    // 2. 初始化显示驱动
-    lv_port_indev_init();   // 3. 初始化触摸驱动 
-    lv_mainstart();         // 4. 启动你的UI 
+    touch_hardware_test_loop();
+    //lv_port_disp_init();    // 2. 初始化显示驱动
+    //lv_port_indev_init();   // 3. 初始化触摸驱动 
+    //lv_mainstart();         // 4. 启动你的UI 
 
     // reminder蜂鸣器
     // 初始化提醒模块
@@ -30,9 +31,9 @@ static void lvgl_task(void *arg)
 
     // nfc_checkin_init();
     while(1) {
-        lv_task_handler();
+        //lv_task_handler();
         // reminder_tick();    // ← 每次循环检查  reminder加入
-        osDelay(5);
+        osDelay(10000);
     }
 }
 

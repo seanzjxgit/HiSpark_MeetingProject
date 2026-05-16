@@ -30,6 +30,7 @@ typedef struct {
 void touch_init(void);
 bool touch_get_data(touch_data_t *out);
 bool touch_is_pressed(void);
+void touch_hardware_test_loop(void);//触摸测试
  
 #endif
  

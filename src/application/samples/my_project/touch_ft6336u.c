@@ -4,6 +4,8 @@
 #include "pinctrl.h"
 #include "cmsis_os2.h"
 #include <stdio.h>
+#include "lcd_ili9341.h" // 测试：显式包含LCD头文件，提供 lcd_set_window 声明和 LCD_SPI_BUS 宏
+#include "spi.h"         // 测试：显式包含SPI头文件，提供 spi_xfer_data_t 结构体定义
 
 static bool ft_read_reg(uint8_t reg, uint8_t *buf, uint8_t len)
 {
@@ -82,4 +84,51 @@ bool touch_get_data(touch_data_t *out)
     out->pressed = true;
 
     return true;
+}
+
+/* =====================================================================
+ * 物理层红蓝屏交替测试函数（追加在 touch_ft6336u.c 文件最末尾）
+ * ===================================================================== */
+void touch_hardware_test_loop(void)
+{
+    // 内部快捷全屏刷色闭包
+    void local_fill_screen(uint16_t color) {
+        uint8_t data[2] = {(color >> 8) & 0xFF, color & 0xFF};
+        lcd_set_window(0, 0, 319, 239); 
+        for (uint32_t i = 0; i < 320 * 240; i++) {
+            uapi_spi_master_write(LCD_SPI_BUS, &(spi_xfer_data_t){.tx_buff = data, .tx_bytes = 2}, 1000);
+        }
+    }
+
+    printf("[TEST] Entering independent Hardware Test Loop...\n");
+    
+    // 1. 初始状态：刷成纯红色
+    uint16_t current_color = 0xF800; 
+    local_fill_screen(current_color);
+    printf("[TEST] Screen filled with RED. Please touch the screen...\n");
+
+    touch_data_t test_data = {0};
+    bool last_pressed = false;
+
+    while (1) {
+        if (touch_is_pressed()) {
+            // INT 引脚（GPIO5）变低，代表电容屏硬件感知到了触摸
+            if (touch_get_data(&test_data)) {
+                
+                if (test_data.pressed && !last_pressed) {
+                    // 按下瞬间翻转颜色
+                    current_color = (current_color == 0xF800) ? 0x001F : 0xF800;
+                    local_fill_screen(current_color);
+                    printf("[TEST] Success! Parsed Coordinates X:%d, Y:%d\n", test_data.x, test_data.y);
+                }
+                last_pressed = test_data.pressed;
+            } else {
+                // 如果手按下去屏幕不变色，但是串口疯狂报这一行，说明底层 I2C 硬件不响应
+                printf("[TEST] INT Pulled Low, but I2C Read FAILED!\n");
+            }
+        } else {
+            last_pressed = false;
+        }
+        osDelay(20); // 20ms 周期的硬件扫描
+    }
 }
